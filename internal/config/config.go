@@ -3,67 +3,69 @@ package config
 import (
 	"encoding/json"
 	"os"
+	"path/filepath"
 )
 
 const configFileName = ".gatorconfig.json"
 
 type Config struct {
-	Db_url            string `json:"db_url"`
-	Current_user_name string `json:"current_user_name"`
+	DBURL           string `json:"db_url"`
+	CurrentUserName string `json:"current_user_name"`
+}
+
+func (cfg *Config) SetUser(userName string) error {
+	cfg.CurrentUserName = userName
+	return write(*cfg)
 }
 
 func Read() (Config, error) {
-	file, err := os.UserHomeDir()
-	nilConfig := Config{Db_url: ""}
+	fullPath, err := getConfigFilePath()
 	if err != nil {
-
-		return nilConfig, err
-	}
-	configFile, err := os.ReadFile(file + "/" + configFileName)
-
-	if err != nil {
-		return nilConfig, err
+		return Config{}, err
 	}
 
-	var config Config
-	err = json.Unmarshal(configFile, &config)
+	file, err := os.Open(fullPath)
 	if err != nil {
-		return nilConfig, err
+		return Config{}, err
+	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	cfg := Config{}
+	err = decoder.Decode(&cfg)
+	if err != nil {
+		return Config{}, err
 	}
 
-	return config, nil
+	return cfg, nil
+}
+
+func getConfigFilePath() (string, error) {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		return "", err
+	}
+	fullPath := filepath.Join(home, configFileName)
+	return fullPath, nil
 }
 
 func write(cfg Config) error {
-	filePath, err := os.UserHomeDir()
-	if err != nil {
-		return err
-	}
-	filePath = filePath + "/" + configFileName
-	file, err := os.Create(filePath)
-
+	fullPath, err := getConfigFilePath()
 	if err != nil {
 		return err
 	}
 
+	file, err := os.Create(fullPath)
+	if err != nil {
+		return err
+	}
 	defer file.Close()
 
 	encoder := json.NewEncoder(file)
-	if err := encoder.Encode(cfg); err != nil {
+	err = encoder.Encode(cfg)
+	if err != nil {
 		return err
 	}
-	return nil
-}
 
-func SetUser(name string) error {
-	config, err := Read()
-	if err != nil {
-		return err
-	}
-	config.Current_user_name = name
-	err = write(config)
-	if err != nil {
-		return err
-	}
 	return nil
 }
