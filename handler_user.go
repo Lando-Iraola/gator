@@ -16,11 +16,8 @@ func handlerRegister(s *state, cmd command) error {
 
 	name := cmd.Args[0]
 
-	var id uuid.NullUUID
-	id.UUID = uuid.New()
-	id.Valid = true
 	user, err := s.db.CreateUser(context.Background(), database.CreateUserParams{
-		ID:        id,
+		ID:        uuid.New(),
 		CreatedAt: time.Now().UTC(),
 		UpdatedAt: time.Now().UTC(),
 		Name:      name,
