@@ -1,6 +1,6 @@
 -- +goose Up
 CREATE TABLE feeds (
-	id UUID not null,
+	id UUID primary key,
 	created_at TIMESTAMP not null,
 	updated_at TIMESTAMP not null,
 	name TEXT not null,
