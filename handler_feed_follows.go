@@ -9,12 +9,7 @@ import (
 	"github.com/google/uuid"
 )
 
-func handlerFeedFollow(s *state, cmd command) error {
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return err
-	}
-
+func handlerFeedFollow(s *state, cmd command, user database.User) error {
 	if len(cmd.Args) != 1 {
 		return fmt.Errorf("usage: %s <url>", cmd.Name)
 	}
@@ -45,12 +40,7 @@ func handlerFeedFollow(s *state, cmd command) error {
 	return nil
 }
 
-func handlerFollowing(s *state, cmd command) error {
-	user, err := s.db.GetUser(context.Background(), s.cfg.CurrentUserName)
-	if err != nil {
-		return err
-	}
-
+func handlerFollowing(s *state, cmd command, user database.User) error {
 	follows, err := s.db.GetFeedFollowsForUser(context.Background(), user.ID)
 
 	if err != nil {
