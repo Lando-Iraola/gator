@@ -47,8 +47,9 @@ func handlerFeeds(s *state, cmd command) error {
 	if err != nil {
 		return fmt.Errorf("Failed to retrieve feeds: %w", err)
 	}
-
+	fmt.Printf("Found %d feeds:\n", len(feeds))
 	for _, val := range feeds {
+		fmt.Println("=====================================")
 		printFeeds(val)
 	}
 	return nil
@@ -64,7 +65,13 @@ func printFeed(feed database.Feed) {
 }
 
 func printFeeds(feeds database.FeedListRow) {
+
+	fmt.Printf("* ID:            %s\n", feeds.ID)
+	fmt.Printf("* URL:           %s\n", feeds.Url)
 	fmt.Printf("* Feed:          %v\n", feeds.Feed)
 	fmt.Printf("* URL:           %v\n", feeds.Url)
 	fmt.Printf("* User:          %s\n", feeds.User)
+	fmt.Printf("* Created:       %v\n", feeds.CreatedAt)
+	fmt.Printf("* Updated:       %v\n", feeds.UpdatedAt)
+
 }

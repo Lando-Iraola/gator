@@ -13,8 +13,11 @@ RETURNING *;
 
 -- name: FeedList :many
 SELECT
+	feeds.id,
 	feeds.name as feed,
 	url,
+	feeds.created_at,
+	feeds.updated_at,
 	users.name as user
 FROM
 	feeds

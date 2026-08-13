@@ -57,8 +57,11 @@ func (q *Queries) CreateFeed(ctx context.Context, arg CreateFeedParams) (Feed, e
 
 const feedList = `-- name: FeedList :many
 SELECT
+	feeds.id,
 	feeds.name as feed,
 	url,
+	feeds.created_at,
+	feeds.updated_at,
 	users.name as user
 FROM
 	feeds
@@ -69,9 +72,12 @@ ON
 `
 
 type FeedListRow struct {
-	Feed string
-	Url  string
-	User string
+	ID        uuid.UUID
+	Feed      string
+	Url       string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	User      string
 }
 
 func (q *Queries) FeedList(ctx context.Context) ([]FeedListRow, error) {
@@ -83,7 +89,14 @@ func (q *Queries) FeedList(ctx context.Context) ([]FeedListRow, error) {
 	var items []FeedListRow
 	for rows.Next() {
 		var i FeedListRow
-		if err := rows.Scan(&i.Feed, &i.Url, &i.User); err != nil {
+		if err := rows.Scan(
+			&i.ID,
+			&i.Feed,
+			&i.Url,
+			&i.CreatedAt,
+			&i.UpdatedAt,
+			&i.User,
+		); err != nil {
 			return nil, err
 		}
 		items = append(items, i)
