@@ -62,6 +62,31 @@ func handlerFeeds(s *state, cmd command) error {
 	return nil
 }
 
+func scrapeFeeds(s *state) error {
+	stale, err := s.db.GetNextFeedToFetch(context.Background())
+	if err != nil {
+		return fmt.Errorf("Couldn't retrieve stale feeds: %w", err)
+	}
+
+	err = s.db.MarkFeedFetched(context.Background(), stale.ID)
+	if err != nil {
+		return fmt.Errorf("Failed to set last fetched timestamp on feed: %w", err)
+	}
+
+	feed, err := fetchFeed(context.Background(), stale.Url)
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("it got here?")
+	for _, val := range feed.Channel.Item {
+		printRssItem(val)
+	}
+
+	return nil
+}
+
 func printFeed(feed database.Feed) {
 	fmt.Printf("* ID:            %s\n", feed.ID)
 	fmt.Printf("* Created:       %v\n", feed.CreatedAt)

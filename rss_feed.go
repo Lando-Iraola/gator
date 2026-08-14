@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/xml"
+	"fmt"
 	"html"
 	"io"
 	"net/http"
@@ -61,4 +62,9 @@ func fetchFeed(ctx context.Context, feedURL string) (*RSSFeed, error) {
 	}
 
 	return &rssFeed, nil
+}
+
+func printRssItem(rssItem RSSItem) {
+	fmt.Printf("* Title:          %s\n", rssItem.Title)
+
 }
