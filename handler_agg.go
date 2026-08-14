@@ -2,10 +2,14 @@ package main
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 	"landovargas/blog-aggregator/internal/database"
 	"log"
+	"strings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 func handlerAgg(s *state, cmd command) error {
@@ -50,7 +54,42 @@ func scrapeFeed(db *database.Queries, feed database.Feed) {
 		return
 	}
 	for _, item := range feedData.Channel.Item {
-		fmt.Printf("Found post: %s\n", item.Title)
+		var desc sql.NullString
+		if item.Description != "" {
+			desc.String = item.Description
+			desc.Valid = true
+		}
+
+		tim, err := time.Parse(time.RFC1123Z, item.PubDate)
+		if err != nil {
+			tim, err = time.Parse(time.RFC1123, item.PubDate)
+			if err != nil {
+				log.Printf("Failed to format post time: %v", err)
+			}
+		}
+		var pubDate sql.NullTime
+		pubDate.Valid = false
+		if err == nil {
+			pubDate.Time = tim
+			pubDate.Valid = true
+		}
+		_, err = db.CreatePost(context.Background(), database.CreatePostParams{
+			ID:          uuid.New(),
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+			Title:       item.Title,
+			Url:         item.Link,
+			Description: desc,
+			PublishedAt: pubDate,
+			FeedID:      feed.ID,
+		})
+
+		if err != nil {
+			if strings.Contains(err.Error(), "23505") {
+				continue
+			}
+			log.Printf("Error encountered: %w", err)
+		}
 	}
 	log.Printf("Feed %s collected, %v posts found", feed.Name, len(feedData.Channel.Item))
 }
