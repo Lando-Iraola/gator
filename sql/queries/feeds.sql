@@ -26,14 +26,15 @@ INNER JOIN
 ON
 	feeds.user_id = users.id;
 
--- name: MarkFeedFetched :exec
+-- name: MarkFeedFetched :one
 UPDATE
 	feeds
 SET
 	last_fetched_at = NOW(),
 	updated_at = NOW()
 WHERE
-	id = $1;
+	id = $1
+RETURNING *;
 
 -- name: GetNextFeedToFetch :one
 SELECT
@@ -41,4 +42,5 @@ SELECT
 FROM
 	feeds
 order by
-	last_fetched_at ASC NULLS FIRST;
+	last_fetched_at ASC NULLS FIRST
+LIMIT 1;
