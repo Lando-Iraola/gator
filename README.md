@@ -58,7 +58,7 @@ go install github.com/Lando-Iraola/gator
 | `follow`    | `<url>`               | URL of a feed to follow                               |
 | `following` | _None_                | Lists all feeds followed by the logged-in user        |
 | `unfollow`  | `<url>`               | URL of a feed to unfollow                             |
-| `browse`    | `[limit]`             | Number of items to display (optional, default: `2`)   |
+| `browse`    | `<limit>`             | Number of items to display (optional, default: `2`)   |
 
 ### login
 
