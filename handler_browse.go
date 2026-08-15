@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"landovargas/blog-aggregator/internal/database"
 	"strconv"
+
+	"github.com/Lando-Iraola/gator/internal/database"
 )
 
 func handlerBrowse(s *state, cmd command, user database.User) error {

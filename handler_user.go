@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
-	"landovargas/blog-aggregator/internal/database"
+
+	"github.com/Lando-Iraola/gator/internal/database"
+
 	"time"
 
 	"github.com/google/uuid"

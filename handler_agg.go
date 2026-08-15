@@ -4,11 +4,11 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"landovargas/blog-aggregator/internal/database"
 	"log"
 	"strings"
 	"time"
 
+	"github.com/Lando-Iraola/gator/internal/database"
 	"github.com/google/uuid"
 )
 
