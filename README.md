@@ -62,6 +62,8 @@ go install github.com/Lando-Iraola/gator
 
 ### login
 
+Sets the currently logged in user
+
 #### arguments
 
 - user_name: The name of a registered user
@@ -71,6 +73,8 @@ go install github.com/Lando-Iraola/gator
 gator login lando
 
 ### register
+
+Register an users and logs them in
 
 #### arguments
 
@@ -82,9 +86,23 @@ gator register lando
 
 ### reset
 
+Wipes the database from all its feeds, users and everything inbetween.
+
+##### example
+
+gator reset
+
 ### users
 
+Lists the registered users in the database
+
+##### example
+
+gator users
+
 ### agg
+
+Scrapes the registered feeds for later browsing, waiting with time between requests.
 
 #### arguments
 
@@ -96,6 +114,8 @@ gator agg 30s
 
 ### addfeed
 
+Adds a feed and the currently logged in user will automatically follow that new feed
+
 #### arguments
 
 - name: The user given name for this feed
@@ -106,6 +126,14 @@ gator agg 30s
 gator addfeed "Test feed" "https://blog.boot.dev/index.xml"
 
 ### feeds
+
+Lists all available feeds
+
+##### example
+
+```bash
+gator feeds
+```
 
 ### follow
 
@@ -123,7 +151,7 @@ gator follow "https://blog.boot.dev/index.xml"
 
 ### following
 
-This command lists the feeds the logged in user is following
+This displays the feeds the currently logged in user is following
 
 ##### example
 
