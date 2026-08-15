@@ -46,6 +46,20 @@ go install github.com/Lando-Iraola/gator
 
 ## List of commands
 
+| Command     | Arguments             | Description                                           |
+| :---------- | :-------------------- | :---------------------------------------------------- |
+| `login`     | `<user_name>`         | The name of a registered user                         |
+| `register`  | `<user_name>`         | The name of a user to register (errors on duplicates) |
+| `reset`     | _None_                | Resets state/database                                 |
+| `users`     | _None_                | Lists all registered users                            |
+| `agg`       | `<time_between_reqs>` | Time between scrapes (e.g., `30s`, `1m`, `1h`)        |
+| `addfeed`   | `<name> <url>`        | Name and URL for the feed to add                      |
+| `feeds`     | _None_                | Lists all feeds                                       |
+| `follow`    | `<url>`               | URL of a feed to follow                               |
+| `following` | _None_                | Lists all feeds followed by the logged-in user        |
+| `unfollow`  | `<url>`               | URL of a feed to unfollow                             |
+| `browse`    | `[limit]`             | Number of items to display (optional, default: `2`)   |
+
 ### login
 
 #### arguments
