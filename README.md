@@ -9,13 +9,39 @@ This project requires the following to run:
 
 - Go
 - Postgresql 18.4
+- goose
 
-## How to run
+## Prerequisite
 
-At the root of the project run
+Gator requires a running PostgreSQL database instance.  
+Gator requires a .gatorconfig.json be present in the home directory of the OS user to point to the database instance.
+
+```json
+{
+  "db_url": "postgres://postgres:@localhost:5432/gator?sslmode=disable",
+  "current_user_name": "gator_db_user"
+}
+```
+
+Gator requires goose for managing database migrations, to install it run the following:
 
 ```bash
-go run . {command} {args}
+go install github.com/pressly/goose/v3/cmd/goose@latest
+```
+
+After the installation of goose we must run the database migrations  
+Before we can do this, we must clone this repository, once done, inside the repository root directory we must run the following:
+
+```bash
+goose postgres postgres://postgres:@localhost:5432/gator -dir ./sql/schema up
+```
+
+## How to install
+
+Once all the prerequisites have been fulfilled we can install gator:
+
+```bash
+go install github.com/Lando-Iraola/gator
 ```
 
 ## List of commands
@@ -26,11 +52,19 @@ go run . {command} {args}
 
 - user_name: The name of a registered user
 
+##### example
+
+gator login lando
+
 ### register
 
 #### arguments
 
 - user_name: The name of a user to register, errors on duplicates
+
+##### example
+
+gator register lando
 
 ### reset
 
@@ -38,8 +72,13 @@ go run . {command} {args}
 
 ### agg
 
-- arguments
-  - time_between_reqs: Time between scrapes, in the format of 30s, 1m, 1m30s, 1h, etc
+#### arguments
+
+- time_between_reqs: Time between scrapes, in the format of 30s, 1m, 1m30s, 1h, etc
+
+##### example
+
+gator agg 30s
 
 ### addfeed
 
@@ -47,6 +86,10 @@ go run . {command} {args}
 
 - name: The user given name for this feed
 - url: The user given url for this feed
+
+##### example
+
+gator addfeed "Test feed" "https://blog.boot.dev/index.xml"
 
 ### feeds
 
@@ -58,9 +101,21 @@ This command allow an user to add to their existing feed the interests of other 
 
 - url: The url of a feed from another user
 
+##### example
+
+```bash
+gator follow "https://blog.boot.dev/index.xml"
+```
+
 ### following
 
 This command lists the feeds the logged in user is following
+
+##### example
+
+```bash
+gator following
+```
 
 ### unfollow
 
@@ -70,6 +125,12 @@ This command unfollow a feed from the logged in user
 
 - url: The url of a feed to unfollow
 
+##### example
+
+```bash
+gator unfollow "https://blog.boot.dev/index.xml"
+```
+
 ### browse
 
 This command displays the title, publishing date, description and link to the article from the logged in user's feed
@@ -77,3 +138,9 @@ This command displays the title, publishing date, description and link to the ar
 #### arguments
 
 - limit: The number of items to be displayed, by default it's 2
+
+##### example
+
+```bash
+gator browse 5
+```
